@@ -1,0 +1,20 @@
+{
+  "name": "vuetask",
+  "short_name": "Vuetask",
+  "icons": [
+    {
+      "src": "/vuetask/static/img/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/vuetask/static/img/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/vuetask/index.html",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#00BCD4"
+}
