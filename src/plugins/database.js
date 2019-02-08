@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import uuid from 'uuid/v4'
 import * as alasql from 'alasql'
 
 const
@@ -14,7 +15,7 @@ const database = {
     `)
     alasql(`
       CREATE TABLE IF NOT EXISTS ${table} (
-        id INT AUTOINCREMENT PRIMARY KEY, 
+        id STRING PRIMARY KEY, 
         name STRING
       )
     `)
@@ -28,7 +29,7 @@ const database = {
   insert(tasks){
     for (const task of tasks) {
       alasql(`INSERT INTO ${table} VALUES ?`, [{ 
-        id: alasql.autoval(table, 'id', true),
+        id: uuid(),
         name: task.name
       }])
     }

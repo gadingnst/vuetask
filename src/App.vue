@@ -10,10 +10,12 @@
         <Footer />
       </v-content>
     </main>
+    <Snackbar />
   </v-app>
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import Footer from '@/components/Footer'
@@ -21,7 +23,7 @@ import Footer from '@/components/Footer'
 export default {
   name: 'app',
   components: {
-    Navbar, Sidebar, Footer
+    Snackbar, Navbar, Sidebar, Footer
   },
   beforeMount(){
     db.init()

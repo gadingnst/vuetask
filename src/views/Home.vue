@@ -56,39 +56,48 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      valid: true,
-      tasks: []
-    }),
-    computed: {
-      name() {
-        return {
-          value: '',
-          length: 30,
-          rules: [
-            val => !!val || 'Nama Tugas harus di isi !',
-            val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`
-          ]
-        }
-      }
-    },
-    methods: {
-      add(){
-        if (this.$refs.form.validate()) {
-          this.tasks.push({
-            name: this.name.value
-          })
-          this.name.value = ''
-        }
-      },
-      remove(index){
-        this.tasks.splice(index, 1)
-      },
-      clear(save = false){
-        if(save) db.insert(this.tasks)
-        this.tasks = []
+import { mapActions } from 'vuex'
+
+export default {
+  data: () => ({
+    valid: true,
+    tasks: []
+  }),
+  computed: {
+    name() {
+      return {
+        value: '',
+        length: 30,
+        rules: [
+          val => !!val || 'Nama Tugas harus di isi !',
+          val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`
+        ]
       }
     }
+  },
+  methods: {
+    ...mapActions({
+      'setSnackbar': 'setSnackbar'
+    }),
+    add(){
+      if (this.$refs.form.validate()) {
+        this.tasks.push({
+          name: this.name.value
+        })
+        this.name.value = ''
+      }
+    },
+    remove(index){
+      this.tasks.splice(index, 1)
+    },
+    clear(save = false){
+      if(save) db.insert(this.tasks)
+      this.setSnackbar({
+        visible: true,
+        msg: 'Tugas disimpan ke List'
+      })
+      this.tasks = []
+    }
   }
+}
 </script>

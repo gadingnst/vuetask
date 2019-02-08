@@ -42,18 +42,27 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      tasks: []
+import { mapActions } from 'vuex'
+
+export default {
+  data: () => ({
+    tasks: []
+  }),
+  methods: {
+    ...mapActions({
+      'setSnackbar': 'setSnackbar'
     }),
-    methods: {
-      remove(i, id){
-        this.tasks.splice(i, 1)
-        db.delete(id)
-      }
-    },
-    mounted(){
-      this.tasks = db.fetch()
+    remove(i, id){
+      this.tasks.splice(i, 1)
+      db.delete(id)
+      this.setSnackbar({
+        visible: true,
+        msg: 'Tugas dihapus dari List'
+      })
     }
+  },
+  mounted(){
+    this.tasks = db.fetch()
   }
+}
 </script>
