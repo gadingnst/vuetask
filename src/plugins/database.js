@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import sql from 'alasql'
+import AlaSQL from 'alasql'
 
 class Database {
 
   constructor(dbname){
-    sql(`
+    AlaSQL.exec(`
       CREATE LOCALSTORAGE DATABASE IF NOT EXISTS ${dbname};
       ATTACH LOCALSTORAGE DATABASE ${dbname};
       USE ${dbname};
@@ -16,28 +16,28 @@ class Database {
     fields.forEach((field, i) => {
       stringField += (i === fields.length-1) ? `${field.name} ${field.options}` : `${field.name} ${field.options}, `
     })
-    sql(`CREATE TABLE IF NOT EXISTS ${name} (${stringField})`)
+    AlaSQL.exec(`CREATE TABLE IF NOT EXISTS ${name} (${stringField})`)
     return this
   }
 
   static fetch(table){
-    return sql.promise(`SELECT * FROM ${table}`)
+    return AlaSQL.promise(`SELECT * FROM ${table}`)
   }
 
   static delete(table, id){
-    return sql.promise(`DELETE FROM ${table} WHERE id = ?`, id)
+    return AlaSQL.promise(`DELETE FROM ${table} WHERE id = ?`, id)
   }
   
-  static insert(table, rows, timeout = 850){
+  static insert(table, tasks, timeout = 850){
     // sengaja bikin promise
-    return new Promise((res) => {
+    return new Promise(resolve => {
       let count = 0
       setTimeout(() => {
-        for (const row of rows) {
-          sql(`INSERT INTO ${table} VALUES ?`, [row])
+        for (const task of tasks) {
+          AlaSQL.exec(`INSERT INTO ${table} VALUES ?`, [task])
           count++
         }
-        return res(count)
+        return resolve(count)
       }, timeout)
     })
   }
