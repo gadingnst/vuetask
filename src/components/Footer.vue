@@ -25,7 +25,7 @@
         "Learner, Coder & Coffee Maniac"
       </v-card-text>
       <v-card-actions class="cyan darken-3 justify-center">
-        &copy;2019 — <strong><b>&nbsp;&lt;&nbsp;/&gt;</b>&nbsp;with 💙 by&nbsp;<b>Sutan Nst</b></strong>
+        &copy;2019 — <strong><b>&nbsp;&lt;&nbsp;/&gt;</b>&nbsp;with 💙 by&nbsp;<b>Sutan Nst.</b></strong>
       </v-card-actions>
     </v-card>
   </v-footer>

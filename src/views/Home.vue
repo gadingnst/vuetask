@@ -40,7 +40,7 @@
                 <v-btn block :disabled="!valid" class="cyan white--text" @click="add">
                   Tambah
                 </v-btn>
-                <v-btn block :disabled="!tasks.length" color="success" @click="clear(true)">
+                <v-btn block :loading="loading" :disabled="!tasks.length" color="success" @click="clear(true)">
                   Simpan ke List
                 </v-btn>
                 <v-btn block :disabled="!tasks.length" color="error" @click="clear(false)">
@@ -61,7 +61,8 @@ import { mapActions } from 'vuex'
 export default {
   data: () => ({
     valid: true,
-    tasks: []
+    tasks: [],
+    loading: false
   }),
   computed: {
     name() {
@@ -91,12 +92,20 @@ export default {
       this.tasks.splice(index, 1)
     },
     clear(save = false){
-      if(save) db.insert(this.tasks)
-      this.setSnackbar({
-        visible: true,
-        msg: 'Tugas disimpan ke List',
-        color: 'success'
-      })
+      if(save) {
+        this.loading = true
+        setTimeout(() => {
+          db.insert(this.tasks)
+          this.setSnackbar({
+            visible: true,
+            msg: 'Tugas disimpan ke List',
+            color: 'success'
+          })
+          this.tasks = []
+          this.loading = false
+        }, 850)
+        return
+      }
       this.tasks = []
     }
   }
