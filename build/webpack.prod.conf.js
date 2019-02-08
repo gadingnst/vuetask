@@ -100,9 +100,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     ]),
     // service worker caching
     new SWPrecacheWebpackPlugin({
-      cacheId: 'vuedo',
+      cacheId: 'vuetask',
       filename: 'service-worker.js',
-      staticFileGlobs: ['dist/**/*.{js,html,css}'],
+      staticFileGlobs: ['dist/**/*.{js,html,css,eot,woff,woff2,ttf,svg}'],
       minify: true,
       stripPrefix: 'dist/'
     })
