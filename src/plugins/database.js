@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import * as sql from 'alasql'
+import sql from 'alasql'
 
 class Database {
 
