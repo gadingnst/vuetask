@@ -4,11 +4,10 @@ import * as sql from 'alasql'
 class Database {
 
   constructor(dbname){
-    this.dbname = dbname
     sql(`
-      CREATE LOCALSTORAGE DATABASE IF NOT EXISTS ${this.dbname};
-      ATTACH LOCALSTORAGE DATABASE ${this.dbname};
-      USE ${this.dbname};
+      CREATE LOCALSTORAGE DATABASE IF NOT EXISTS ${dbname};
+      ATTACH LOCALSTORAGE DATABASE ${dbname};
+      USE ${dbname};
     `)
   }
 
@@ -29,13 +28,13 @@ class Database {
     return sql.promise(`DELETE FROM ${table} WHERE id = ?`, id)
   }
   
-  static insert(table, tasks, timeout = 850){
+  static insert(table, rows, timeout = 850){
     // sengaja bikin promise
     return new Promise((res) => {
       let count = 0
       setTimeout(() => {
-        for (const task of tasks) {
-          sql(`INSERT INTO ${table} VALUES ?`, [task])
+        for (const row of rows) {
+          sql(`INSERT INTO ${table} VALUES ?`, [row])
           count++
         }
         return res(count)
