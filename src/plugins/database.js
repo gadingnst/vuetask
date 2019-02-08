@@ -1,44 +1,53 @@
 import Vue from 'vue'
-import uuid from 'uuid/v4'
-import * as alasql from 'alasql'
+import * as sql from 'alasql'
 
-const
-  dbname = 'vuetaskdb',
-  table = 'tasks'
+class Database {
 
-const database = {
-  init(){
-    alasql(`
-      CREATE LOCALSTORAGE DATABASE IF NOT EXISTS ${dbname};
-      ATTACH LOCALSTORAGE DATABASE ${dbname};
-      USE ${dbname};
+  constructor(dbname){
+    this.dbname = dbname
+    sql(`
+      CREATE LOCALSTORAGE DATABASE IF NOT EXISTS ${this.dbname};
+      ATTACH LOCALSTORAGE DATABASE ${this.dbname};
+      USE ${this.dbname};
     `)
-    alasql(`
-      CREATE TABLE IF NOT EXISTS ${table} (
-        id STRING PRIMARY KEY, 
-        name STRING
-      )
-    `)
-  },
-  fetch(){
-    return alasql(`SELECT * FROM ${table}`)
-  },
-  delete(id){
-    alasql(`DELETE FROM ${table} WHERE id = ?`, id)
-  },
-  insert(tasks){
-    for (const task of tasks) {
-      alasql(`INSERT INTO ${table} VALUES ?`, [{ 
-        id: uuid(),
-        name: task.name
-      }])
-    }
-  },
+  }
+
+  createTable(name, fields) {
+    let stringField = ''
+    fields.forEach((field, i) => {
+      stringField += (i === fields.length-1) ? `${field.name} ${field.options}` : `${field.name} ${field.options}, `
+    })
+    sql(`CREATE TABLE IF NOT EXISTS ${name} (${stringField})`)
+    return this
+  }
+
+  static fetch(table){
+    return sql.promise(`SELECT * FROM ${table}`)
+  }
+
+  static delete(table, id){
+    return sql.promise(`DELETE FROM ${table} WHERE id = ?`, id)
+  }
+  
+  static insert(table, tasks, timeout = 850){
+    // sengaja bikin promise
+    return new Promise((res) => {
+      let count = 0
+      setTimeout(() => {
+        for (const task of tasks) {
+          sql(`INSERT INTO ${table} VALUES ?`, [task])
+          count++
+        }
+        return res(count)
+      }, timeout)
+    })
+  }
+
 }
 
 Plugin.install = Vue => {
-  Vue.db = database
-  window.db = database
+  Vue.db = Database
+  window.db = Database
 };
 
 Vue.use(Plugin)

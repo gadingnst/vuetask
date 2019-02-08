@@ -43,7 +43,7 @@
                 <v-btn block :loading="loading" :disabled="!tasks.length" color="success" @click="clear(true)">
                   Simpan ke List
                 </v-btn>
-                <v-btn block :disabled="!tasks.length" color="error" @click="clear(false)">
+                <v-btn block :disabled="!tasks.length" color="error" @click="clear()">
                   Clear
                 </v-btn>
               </v-container>
@@ -57,6 +57,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import uuid from 'uuid/v4'
 
 export default {
   data: () => ({
@@ -70,7 +71,7 @@ export default {
         value: '',
         length: 30,
         rules: [
-          val => !!val || 'Nama Tugas harus di isi !',
+          val => !(!val) || 'Nama Tugas harus di isi !',
           val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`
         ]
       }
@@ -83,6 +84,7 @@ export default {
     add(){
       if (this.$refs.form.validate()) {
         this.tasks.push({
+          id: uuid(),
           name: this.name.value
         })
         this.name.value = ''
@@ -91,20 +93,16 @@ export default {
     remove(index){
       this.tasks.splice(index, 1)
     },
-    clear(save = false){
+    async clear(save = false){
       if(save) {
         this.loading = true
-        setTimeout(() => {
-          db.insert(this.tasks)
-          this.setSnackbar({
-            visible: true,
-            msg: 'Tugas disimpan ke List',
-            color: 'success'
-          })
-          this.tasks = []
-          this.loading = false
-        }, 850)
-        return
+        const result = await db.insert('tasks', this.tasks)
+        this.setSnackbar({
+          visible: true,
+          msg: `${result} Tugas disimpan ke List`,
+          color: 'success'
+        })
+        this.loading = false
       }
       this.tasks = []
     }

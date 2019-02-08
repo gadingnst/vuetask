@@ -26,7 +26,11 @@ export default {
     Snackbar, Navbar, Sidebar, Footer
   },
   beforeMount(){
-    db.init()
+    new db('vuetaskdb')
+    .createTable('tasks', [
+      { name: 'id', opt: 'STRING PRIMARY KEY' },
+      { name: 'name', opt: 'STRING' }
+    ])
   }
 }
 </script>

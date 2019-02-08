@@ -52,9 +52,9 @@ export default {
     ...mapActions({
       'setSnackbar': 'setSnackbar'
     }),
-    remove(i, id){
+    async remove(i, id){
+      await db.delete('tasks', id)
       this.tasks.splice(i, 1)
-      db.delete(id)
       this.setSnackbar({
         visible: true,
         msg: 'Tugas dihapus dari List'
@@ -62,7 +62,10 @@ export default {
     }
   },
   mounted(){
-    this.tasks = db.fetch()
+    db.fetch('tasks')
+    .then((result) => {
+      this.tasks = result
+    })
   }
 }
 </script>
