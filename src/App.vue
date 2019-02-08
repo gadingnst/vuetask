@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Snackbar />
     <main>
       <Navbar />
       <Sidebar />
@@ -10,7 +11,6 @@
         <Footer />
       </v-content>
     </main>
-    <Snackbar />
   </v-app>
 </template>
 

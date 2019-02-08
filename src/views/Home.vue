@@ -94,7 +94,8 @@ export default {
       if(save) db.insert(this.tasks)
       this.setSnackbar({
         visible: true,
-        msg: 'Tugas disimpan ke List'
+        msg: 'Tugas disimpan ke List',
+        color: 'success'
       })
       this.tasks = []
     }
