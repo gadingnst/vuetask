@@ -93,7 +93,7 @@ export default {
     name() {
       return {
         value: '',
-        length: 60,
+        length: 50,
         rules: [
           val => !(!val) || 'Nama Tugas harus di isi !',
           val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`

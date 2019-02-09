@@ -28,7 +28,7 @@
                     {{ 'Deadline: '+task.deadline }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
-                    {{ task.name }}
+                    {{ task.name+' | dibuat: '+task.created }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 
@@ -64,7 +64,7 @@
                     {{ 'Selesai: '+task.completed }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
-                    {{ task.name }}
+                    {{ task.name+'\n dibuat: '+task.created }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 
@@ -73,7 +73,7 @@
                     <v-icon color="orange lighten-1">fa fa-undo</v-icon>
                     {{ mobile ? '' : '&nbsp;Tandai belum dikerjakan' }}
                   </v-btn>
-                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task, 'completedTasks')">
+                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task.id, 'completedTasks')">
                     <v-icon color="red lighten-1">fa fa-trash</v-icon>
                     {{ mobile ? '' : '&nbsp;Hapus' }}
                   </v-btn>
@@ -114,7 +114,8 @@ export default {
           id: task.id,
           name: task.name,
           completed: this.date,
-          deadline: task.deadline
+          deadline: task.deadline,
+          created: task.created
         })
       } else {
         await db.update('tasks', { completed: null }, { id: task.id })
@@ -123,7 +124,8 @@ export default {
           id: task.id,
           name: task.name,
           completed: null,
-          deadline: task.deadline
+          deadline: task.deadline,
+          created: task.created
         })
       }
     },
