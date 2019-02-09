@@ -10,7 +10,7 @@
           <v-container>
             <v-list subheader>
               <v-subheader v-if="!tasks.length">
-                Silahkan Tambah Tugas Pertamamu !
+                Silahkan Tambah Tugasmu !
               </v-subheader>
               <v-list-tile
                 v-for="(task, i) in tasks"
@@ -29,6 +29,8 @@
             </v-list>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
+                outline
+                append-icon="fa fa-pencil"
                 v-model="name.value"
                 :counter="name.length"
                 :rules="name.rules"
@@ -38,13 +40,16 @@
               ></v-text-field>
               <v-container>
                 <v-btn block :disabled="!valid" class="cyan white--text" @click="add">
-                  Tambah
+                  <v-icon>fa fa-pencil-square</v-icon>
+                  &nbsp;Tambah
                 </v-btn>
                 <v-btn block :loading="loading" :disabled="!tasks.length" color="success" @click="clear(true)">
-                  Simpan ke List
+                  <v-icon>fa fa-list-alt</v-icon>
+                  &nbsp;Simpan ke List
                 </v-btn>
                 <v-btn block :disabled="!tasks.length" color="error" @click="clear()">
-                  Clear
+                  <v-icon>fa fa-refresh</v-icon>
+                  &nbsp;Clear
                 </v-btn>
               </v-container>
             </v-form>
@@ -69,7 +74,7 @@ export default {
     name() {
       return {
         value: '',
-        length: 30,
+        length: 60,
         rules: [
           val => !(!val) || 'Nama Tugas harus di isi !',
           val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`
@@ -85,7 +90,8 @@ export default {
       if (this.$refs.form.validate()) {
         this.tasks.push({
           id: uuid(),
-          name: this.name.value
+          name: this.name.value,
+          completed: false
         })
         this.name.value = ''
       }

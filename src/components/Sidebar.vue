@@ -1,11 +1,12 @@
 <template>
   <v-navigation-drawer
+    width="225px"
     v-model="sidebar"
     fixed
     right
     app
   >
-    <v-list dense>
+    <v-list dense two-line>
       <template v-for="(route, index) in routes">
         <v-list-tile :to="route.link" :key="index">
           <v-list-tile-action>

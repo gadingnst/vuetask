@@ -27,10 +27,13 @@ export default {
   },
   beforeMount(){
     new db('vuetaskdb')
-    .createTable('tasks', [
-      { name: 'id', opt: 'STRING PRIMARY KEY' },
-      { name: 'name', opt: 'STRING' }
-    ])
+    .createTable('tasks', {
+      id: 'STRING PRIMARY KEY',
+      name: 'STRING',
+      completed: 'BOOLEAN',
+      deadline: 'DATE',
+      created: 'DATE'
+    })
   }
 }
 </script>
