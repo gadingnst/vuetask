@@ -5,7 +5,7 @@
         <v-dialog
           ref="dialog"
           v-model="dialog"
-          :return-value.sync="date"
+          :return-value="date"
           persistent
           lazy
           full-width
@@ -35,7 +35,7 @@
                   <v-list-tile-title>{{ task.name }}</v-list-tile-title>
                   <v-list-tile-sub-title>
                     <v-icon>fa fa-calendar</v-icon>
-                    Deadline: {{ task.deadline }}
+                    Atur Deadline: {{ formatDate(task.deadline) }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 <v-btn icon @click="remove(i)">
@@ -79,6 +79,7 @@
 <script>
 import { mapActions } from 'vuex'
 import uuid from 'uuid/v4'
+import moment from 'moment'
 
 export default {
   data: () => ({
@@ -86,8 +87,7 @@ export default {
     valid: true,
     loading: false,
     selectedTask: {},
-    tasks: [],
-    date: new Date().toISOString().substr(0, 10)
+    tasks: []
   }),
   computed: {
     name() {
@@ -99,20 +99,26 @@ export default {
           val => (val && val.length <= this.name.length) || `Nama Tugas tidak boleh lebih dari ${this.name.length} karakter`
         ]
       }
+    },
+    date(){
+      return this.$store.getters.datenow
     }
   },
   methods: {
     ...mapActions({
       'setSnackbar': 'setSnackbar'
     }),
+    formatDate(date){
+      return moment(date).format('DD/MM/YYYY')
+    },
     add(){
       if (this.$refs.form.validate()) {
         this.tasks.push({
           id: uuid(),
           name: this.name.value,
           completed: null,
-          deadline: this.date,
-          created: this.date
+          deadline: this.$store.getters.datenow,
+          created: this.$store.getters.datenow
         })
         this.name.value = ''
       }

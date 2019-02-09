@@ -8,7 +8,7 @@
             <v-toolbar-title>List Tugas</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
-
+          
           <v-list three-line>
             <v-subheader v-if="ongoingTasks.length || !completedTasks.length">
               {{ (!ongoingTasks.length) ? 'List kosong. Silahkan Tambah Tugas Pertamamu !' : 'On Going' }}
@@ -19,16 +19,16 @@
 
               <v-list-tile :key="task.id" avatar @click="">
                 <v-list-tile-avatar>
-                  <v-icon class="warning white--text">fa fa-info</v-icon>
+                  <v-icon :class="deadlineTag(task.deadline).class">{{ deadlineTag(task.deadline).emot }}</v-icon>
                 </v-list-tile-avatar>
 
                 <v-list-tile-content>
                   <v-list-tile-title>
                     <v-icon color="error">fa fa-calendar-times-o</v-icon>
-                    {{ 'Deadline: '+task.deadline }}
+                    {{ 'Deadline: '+formatDate(task.deadline) }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
-                    {{ task.name+' | dibuat: '+task.created }}
+                    {{ task.name+' | '+dayleft(task.deadline) }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 
@@ -61,10 +61,10 @@
                 <v-list-tile-content>
                   <v-list-tile-title>
                     <v-icon color="success">fa fa-calendar-check-o</v-icon>
-                    {{ 'Selesai: '+task.completed }}
+                    {{ 'Selesai: '+formatDate(task.completed) }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
-                    {{ task.name+'\n dibuat: '+task.created }}
+                    {{ task.name+' | dibuat: '+task.created }}
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 
@@ -90,22 +90,41 @@
 
 <script>
 import { mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
   data: () => ({
     ongoingTasks: [],
     completedTasks: [],
-    date: new Date().toISOString().substr(0, 10)
   }),
   computed: {
     mobile(){
       return this.$vuetify.breakpoint.smAndDown
+    },
+    date(){
+      return this.$store.getters.datenow
     }
   },
   methods: {
     ...mapActions({
       'setSnackbar': 'setSnackbar'
     }),
+    diffDate(deadline){
+      return moment(deadline).diff(this.date, 'days')
+    },
+    dayleft(deadline){
+      const diff = this.diffDate(deadline)
+      return (diff > 0) ? `Tersisa ${diff} hari lagi.` : (diff === 0) ? 'Deadline hari ini' : 'Deadline telah lewat'
+    },
+    formatDate(date){
+      return moment(date).format('DD/MM/YYYY')
+    },
+    deadlineTag(deadline){
+      const diff = this.diffDate(deadline)
+      if(diff > 6) return { class: 'primary white--text', emot: 'fa fa-smile-o'}
+      else if (diff <= 5 && diff > 2) return { class: 'warning white--text', emot: 'fa fa-meh-o'}
+      else return { class: 'error white--text', emot: 'fa fa-frown-o'}
+    },
     async setCompleted(i, task){
       if(!task.completed){
         await db.update('tasks', { completed: this.date }, { id: task.id })

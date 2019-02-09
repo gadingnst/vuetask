@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import moment from 'moment'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  strict: true,
   state: {
+    datenow: moment().format('YYYY-MM-DD'),
     sidebar: null,
     snackbar: {
       visibility: false,
@@ -36,5 +37,8 @@ export default new Vuex.Store({
         commit('closeSnackbar')
       }, snackbar.timeout)
     }
+  },
+  getters: {
+    datenow: state => state.datenow
   }
 })
