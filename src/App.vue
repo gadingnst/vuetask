@@ -30,8 +30,8 @@ export default {
     .createTable('tasks', {
       id: 'STRING PRIMARY KEY',
       name: 'STRING',
-      completed: 'BOOLEAN',
       deadline: 'DATE',
+      completed: 'DATE',
       created: 'DATE'
     })
   }

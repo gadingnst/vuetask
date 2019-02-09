@@ -2,6 +2,20 @@
   <v-container fill-height fluid>
     <v-layout row wrap>
       <v-flex xs12>
+        <v-dialog
+          ref="dialog"
+          v-model="dialog"
+          :return-value.sync="date"
+          persistent
+          lazy
+          full-width
+          width="290px"
+        >
+          <v-date-picker color="cyan" v-model="selectedTask.deadline" scrollable>
+            <v-spacer></v-spacer>
+            <v-btn flat color="cyan" @click="dialog = false">OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
         <v-card>
           <v-toolbar color="cyan" dark>
             <v-icon size="18px">fa fa-edit</v-icon>
@@ -17,11 +31,13 @@
                 :key="i"
                 @click=""
               >
-                <v-list-tile-content>
+                <v-list-tile-content @click="selectTask(task, i)">
                   <v-list-tile-title>{{ task.name }}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{ task.deadline }}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>
+                    <v-icon>fa fa-calendar</v-icon>
+                    Deadline: {{ task.deadline }}
+                  </v-list-tile-sub-title>
                 </v-list-tile-content>
-
                 <v-btn icon @click="remove(i)">
                   <v-icon color="red lighten-1">fa fa-close</v-icon>
                 </v-btn>
@@ -66,9 +82,12 @@ import uuid from 'uuid/v4'
 
 export default {
   data: () => ({
+    dialog: false,
     valid: true,
+    loading: false,
+    selectedTask: {},
     tasks: [],
-    loading: false
+    date: new Date().toISOString().substr(0, 10)
   }),
   computed: {
     name() {
@@ -91,13 +110,19 @@ export default {
         this.tasks.push({
           id: uuid(),
           name: this.name.value,
-          completed: false
+          completed: null,
+          deadline: this.date,
+          created: this.date
         })
         this.name.value = ''
       }
     },
     remove(index){
       this.tasks.splice(index, 1)
+    },
+    selectTask(task){
+      this.dialog = true
+      this.selectedTask = task
     },
     async clear(save = false){
       if(save) {
