@@ -5,10 +5,16 @@
 > Website : https://sutanlab.js.org/vuetask
 
 ## Core Features
-1. Progressive Web Application build on VueJS
-2. No depends on Internet. Can work Offline mode 
-3. Can be installed and run on all mobile devices (Add to Home Screen)
-4. Use Local Storage to store Tasks data
+1. Progressive Web Application build on VueJS SPA.
+2. No depends on Internet. Can work Offline mode.
+3. Can be installed on all mobile devices (Add to Home Screen).
+4. Use Local Storage to store Tasks data.
+
+## Application Features
+1. Set Deadline date on your Tasks.
+2. Set your Tasks as Completed.
+3. Get the remaining of Deadline days.
+4. Shows the percentage of your completed Tasks
 
 ## Build Setup
 

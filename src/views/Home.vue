@@ -26,22 +26,24 @@
               <v-subheader v-if="!tasks.length">
                 Silahkan Tambah Tugasmu !
               </v-subheader>
-              <v-list-tile
-                v-for="(task, i) in tasks"
-                :key="i"
-                @click=""
-              >
-                <v-list-tile-content @click="selectTask(task, i)">
-                  <v-list-tile-title>{{ task.name }}</v-list-tile-title>
-                  <v-list-tile-sub-title>
-                    <v-icon>fa fa-calendar</v-icon>
-                    Atur Deadline: {{ formatDate(task.deadline) }}
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-btn icon @click="remove(i)">
-                  <v-icon color="red lighten-1">fa fa-close</v-icon>
-                </v-btn>
-              </v-list-tile>
+              <v-slide-y-transition :hide-on-leave="!tasks.length" class="py-0" group tag="v-list">
+                <v-list-tile
+                  v-for="(task, i) in tasks"
+                  :key="i"
+                  @click=""
+                >
+                  <v-list-tile-content @click="selectTask(task, i)">
+                    <v-list-tile-title>{{ task.name }}</v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      <v-icon>fa fa-calendar</v-icon>
+                      Atur Deadline: {{ formatDate(task.deadline) }}
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  <v-btn icon @click="remove(i)">
+                    <v-icon color="red lighten-1">fa fa-close</v-icon>
+                  </v-btn>
+                </v-list-tile>
+              </v-slide-y-transition>
             </v-list>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field

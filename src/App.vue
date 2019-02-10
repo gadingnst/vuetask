@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 import Offline from 'v-offline'
 import Snackbar from '@/components/Snackbar'
 import Navbar from '@/components/Navbar'
@@ -29,7 +29,7 @@ export default {
     Snackbar, Navbar, Sidebar, Footer, Offline
   },
   methods: {
-    ...mapMutations({
+    ...mapActions({
       setSnackbar: 'setSnackbar'
     }),
     connection(status){

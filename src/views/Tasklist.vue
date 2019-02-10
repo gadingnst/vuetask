@@ -5,7 +5,7 @@
         <Modal height="300px" width="500px">
           <template slot="title">
             <v-icon size="18px">fa fa-question-circle</v-icon>
-            &nbsp;<b>Hints</b>
+            &nbsp;<b>Petunjuk</b>
           </template>
           <template slot="body">
             <v-list three-line>
@@ -35,76 +35,87 @@
           </v-toolbar>
           
           <v-list three-line>
+            <v-subheader v-if="totalTasks">
+              <v-progress-linear 
+                v-model="completedPercentage"
+                :color="(completedPercentage > 69) ? 'success' : (completedPercentage > 32) ? 'warning' : 'error'"
+              >
+              </v-progress-linear>
+              <v-subheader>{{ completedPercentage+'%' }}</v-subheader>
+            </v-subheader>
             <v-subheader v-if="ongoingTasks.length || !completedTasks.length">
-              {{ (!ongoingTasks.length) ? 'List kosong. Silahkan Tambah Tugas Pertamamu !' : 'On Going' }}
+              {{ (!ongoingTasks.length) ? 'List kosong. Silahkan Tambah Tugas Pertamamu !' : `On Going. ${completedTasks.length} dari ${totalTasks} dikerjakan.` }}
             </v-subheader>
 
-            <template v-for="(task, i) in ongoingTasks">
-              <v-divider></v-divider>
+            <v-slide-x-reverse-transition group tag="v-list">
+              <template v-for="(task, i) in ongoingTasks">
+                <v-divider></v-divider>
 
-              <v-list-tile :key="task.id" avatar @click="">
-                <v-list-tile-avatar>
-                  <v-icon :class="deadlineTag(task.deadline).class">{{ deadlineTag(task.deadline).emot }}</v-icon>
-                </v-list-tile-avatar>
+                <v-list-tile :key="task.id" avatar @click="">
+                  <v-list-tile-avatar>
+                    <v-icon :class="deadlineTag(task.deadline).class">{{ deadlineTag(task.deadline).emot }}</v-icon>
+                  </v-list-tile-avatar>
 
-                <v-list-tile-content>
-                  <v-list-tile-title>
-                    <v-icon color="error">fa fa-calendar-times-o</v-icon>
-                    {{ 'Deadline: '+formatDate(task.deadline) }}
-                  </v-list-tile-title>
-                  <v-list-tile-sub-title>
-                    {{ task.name+' | '+dayleft(task.deadline) }}
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-                
-                <v-list-tile-action>
-                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="setCompleted(i, task)">
-                    <v-icon color="green lighten-1">fa fa-check</v-icon>
-                    {{ mobile ? '' : '&nbsp;Tandai sudah dikerjakan' }}
-                  </v-btn>
-                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task.id, 'ongoingTasks')">
-                    <v-icon color="red lighten-1">fa fa-trash</v-icon>
-                    {{ mobile ? '' : '&nbsp;Hapus' }}
-                  </v-btn>
-                </v-list-tile-action>
-              </v-list-tile>
-            </template>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <v-icon color="error">fa fa-calendar-times-o</v-icon>
+                      {{ 'Deadline: '+formatDate(task.deadline) }}
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      {{ task.name+' | '+dayleft(task.deadline) }}
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  
+                  <v-list-tile-action>
+                    <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="setCompleted(i, task)">
+                      <v-icon color="green lighten-1">fa fa-check</v-icon>
+                      {{ mobile ? '' : '&nbsp;Tandai sudah dikerjakan' }}
+                    </v-btn>
+                    <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task.id, 'ongoingTasks')">
+                      <v-icon color="red lighten-1">fa fa-trash</v-icon>
+                      {{ mobile ? '' : '&nbsp;Hapus' }}
+                    </v-btn>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </template>
+            </v-slide-x-reverse-transition>
           </v-list>
           <v-list three-line>
             <v-subheader v-if="(ongoingTasks.length+completedTasks.length)">
               {{ (!completedTasks.length) ? 'Belum ada tugas yang sudah dikerjakan' : 'Sudah dikerjakan' }}
             </v-subheader>
+            <v-slide-x-transition group tag="v-list">
+              <template v-for="(task, i) in completedTasks">
+                <v-divider></v-divider>
 
-            <template v-for="(task, i) in completedTasks">
-              <v-divider></v-divider>
+                <v-list-tile :key="task.id" avatar @click="">
+                  <v-list-tile-avatar>
+                    <v-icon class="success white--text">fa fa-check</v-icon>
+                  </v-list-tile-avatar>
 
-              <v-list-tile :key="task.id" avatar @click="">
-                <v-list-tile-avatar>
-                  <v-icon class="success white--text">fa fa-check</v-icon>
-                </v-list-tile-avatar>
-
-                <v-list-tile-content>
-                  <v-list-tile-title>
-                    <v-icon color="success">fa fa-calendar-check-o</v-icon>
-                    {{ 'Selesai: '+formatDate(task.completed) }}
-                  </v-list-tile-title>
-                  <v-list-tile-sub-title>
-                    {{ task.name+' | dibuat: '+task.created }}
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-                
-                <v-list-tile-action>
-                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="setCompleted(i, task)">
-                    <v-icon color="orange lighten-1">fa fa-undo</v-icon>
-                    {{ mobile ? '' : '&nbsp;Tandai belum dikerjakan' }}
-                  </v-btn>
-                  <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task.id, 'completedTasks')">
-                    <v-icon color="red lighten-1">fa fa-trash</v-icon>
-                    {{ mobile ? '' : '&nbsp;Hapus' }}
-                  </v-btn>
-                </v-list-tile-action>
-              </v-list-tile>
-            </template>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <v-icon color="success">fa fa-calendar-check-o</v-icon>
+                      {{ 'Selesai: '+formatDate(task.completed) }}
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      {{ task.name+' | dibuat: '+task.created }}
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  
+                  <v-list-tile-action>
+                    <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="setCompleted(i, task)">
+                      <v-icon color="orange lighten-1">fa fa-undo</v-icon>
+                      {{ mobile ? '' : '&nbsp;Tandai belum dikerjakan' }}
+                    </v-btn>
+                    <v-btn :icon="mobile" :ripple="mobile" :small="!mobile" @click="remove(i, task.id, 'completedTasks')">
+                      <v-icon color="red lighten-1">fa fa-trash</v-icon>
+                      {{ mobile ? '' : '&nbsp;Hapus' }}
+                    </v-btn>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </template>
+            </v-slide-x-transition>
           </v-list>
           <v-divider style="margin-bottom: 80px"></v-divider>
         </v-card>
@@ -135,6 +146,12 @@ export default {
     },
     date(){
       return this.$store.getters.datenow
+    },
+    totalTasks(){
+      return this.ongoingTasks.length+this.completedTasks.length
+    },
+    completedPercentage(){
+      return parseInt((this.completedTasks.length / (this.totalTasks)) * 100)
     }
   },
   methods: {
