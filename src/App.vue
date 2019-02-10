@@ -11,10 +11,13 @@
         <Footer />
       </v-content>
     </main>
+    <Offline @detected-condition="connection" />
   </v-app>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import Offline from 'v-offline'
 import Snackbar from '@/components/Snackbar'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
@@ -23,7 +26,20 @@ import Footer from '@/components/Footer'
 export default {
   name: 'app',
   components: {
-    Snackbar, Navbar, Sidebar, Footer
+    Snackbar, Navbar, Sidebar, Footer, Offline
+  },
+  methods: {
+    ...mapMutations({
+      setSnackbar: 'setSnackbar'
+    }),
+    connection(status){
+      if (!status){
+        this.setSnackbar({
+          visible: true,
+          msg: 'Tidak ada internet !'
+        })
+      }
+    }
   },
   beforeMount(){
     new db('vuetaskdb')

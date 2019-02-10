@@ -195,10 +195,6 @@ export default {
     async remove(i, id, key){
       await db.delete('tasks', { id: id })
       this[key].splice(i, 1)
-      this.setSnackbar({
-        visible: true,
-        msg: 'Tugas dihapus dari List'
-      })
       this.sortTasks({
         ongoing: {
           key: 'deadline'
@@ -207,6 +203,10 @@ export default {
           key: 'completed',
           order: 'desc'
         }
+      })
+      this.setSnackbar({
+        visible: true,
+        msg: 'Tugas dihapus dari List'
       })
     },
     sortValues(key, order = 'asc') {
