@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     datenow: moment().format('YYYY-MM-DD'),
     sidebar: null,
+    modal: false,
     snackbar: {
       visibility: false,
       timeout: null,
@@ -18,6 +19,9 @@ export default new Vuex.Store({
   mutations: {
     setSidebar(state, value){
       state.sidebar = value
+    },
+    setModal(state, value){
+      state.modal = value || !state.modal
     },
     setSnackbar(state, snackbar) {
       state.snackbar.color = snackbar.color || null

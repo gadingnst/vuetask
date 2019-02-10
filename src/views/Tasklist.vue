@@ -2,11 +2,36 @@
   <v-container fill-height fluid>
     <v-layout row wrap center>
       <v-flex xs12>
+        <Modal height="300px" width="500px">
+          <template slot="title">
+            <v-icon size="18px">fa fa-question-circle</v-icon>
+            &nbsp;<b>Hints</b>
+          </template>
+          <template slot="body">
+            <v-list three-line>
+              <v-list-tile avatar v-for="(hint, i) in hints" :key="i">
+                <v-list-tile-avatar>
+                  <v-icon :class="hint.class">{{ hint.icon }}</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  {{ hint.desc }}
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </template>
+          <template slot="actions">
+            <v-spacer></v-spacer>
+            <v-btn color="cyan" flat @click="setModal(false)">Close</v-btn>
+          </template>
+        </Modal>
         <v-card>
           <v-toolbar color="cyan" dark>
             <v-icon size="18px">fa fa-list-alt</v-icon>
             <v-toolbar-title>List Tugas</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn icon @click="setModal">
+              <v-icon size="18px">fa fa-ellipsis-v</v-icon>
+            </v-btn>
           </v-toolbar>
           
           <v-list three-line>
@@ -89,13 +114,20 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import Modal from '@/components/Modal'
+import { mapActions, mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
+  components: { Modal },
   data: () => ({
     ongoingTasks: [],
     completedTasks: [],
+    hints: [
+      { class: 'primary white--text', icon: 'fa fa-smile-o', desc: 'Aman : Deadline masih diatas seminggu.' },
+      { class: 'warning white--text', icon: 'fa fa-meh-o', desc: 'Kurang Aman : Deadline menghampirimu. Kerjakan sekarang lebih baik daripada menunda.' },
+      { class: 'error white--text', icon: 'fa fa-frown-o', desc: 'Bahaya : Deadline sudah dekat. Silahkan kerjakan tugasmu sekarang !' }
+    ]
   }),
   computed: {
     mobile(){
@@ -106,8 +138,11 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setModal: 'setModal'
+    }),
     ...mapActions({
-      'setSnackbar': 'setSnackbar'
+      setSnackbar: 'setSnackbar'
     }),
     diffDate(deadline){
       return moment(deadline).diff(this.date, 'days')
@@ -147,6 +182,15 @@ export default {
           created: task.created
         })
       }
+      this.sortTasks({
+        ongoing: {
+          key: 'deadline'
+        }, 
+        completed: {
+          key: 'completed',
+          order: 'desc'
+        }
+      })
     },
     async remove(i, id, key){
       await db.delete('tasks', { id: id })
@@ -155,6 +199,30 @@ export default {
         visible: true,
         msg: 'Tugas dihapus dari List'
       })
+      this.sortTasks({
+        ongoing: {
+          key: 'deadline'
+        }, 
+        completed: {
+          key: 'completed',
+          order: 'desc'
+        }
+      })
+    },
+    sortValues(key, order = 'asc') {
+      return (a, b) => {
+        if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) return 0
+        const varA = (typeof a[key] === 'string') ? a[key].toUpperCase() : a[key]
+        const varB = (typeof b[key] === 'string') ? b[key].toUpperCase() : b[key]
+        let comparison = 0
+        if (varA > varB) comparison = 1
+        else if (varA < varB) comparison = -1
+        return (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison
+      }
+    },
+    sortTasks(prop){
+      this.ongoingTasks.sort(this.sortValues(prop.ongoing.key, prop.ongoing.order))
+      this.completedTasks.sort(this.sortValues(prop.completed.key, prop.completed.order))
     }
   },
   mounted(){
@@ -164,6 +232,15 @@ export default {
         if(data.completed === null) this.ongoingTasks.push(data)
         else this.completedTasks.push(data)
       }
+      this.sortTasks({
+        ongoing: {
+          key: 'deadline'
+        }, 
+        completed: {
+          key: 'completed',
+          order: 'desc'
+        }
+      })
     })
   }
 }
