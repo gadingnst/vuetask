@@ -188,7 +188,7 @@ export default {
       push: 'notify'
     }),
     allowPush(){
-      this.push({
+      notify({
         title: 'Notifikasi Diaktifkan',
         body: 'Anda telah mengaktifkan notifikasi aplikasi ini.'
       })

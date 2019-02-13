@@ -39,15 +39,6 @@ export default new Vuex.Store({
       setTimeout(() => {
         commit('closeSnackbar')
       }, snackbar.timeout)
-    },
-    notify({ commit }, opt){
-      Vue.push.create(opt.title, {
-        body: opt.body,
-        icon: '/vuetask/static/img/icons/favicon-32x32.png',
-        link: '/vuetask/#/list',
-        timeout: 4000,
-        vibrate: [200, 100, 200, 100, 200, 100, 200]
-      })
     }
   },
   getters: {
