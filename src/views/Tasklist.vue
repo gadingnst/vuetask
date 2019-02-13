@@ -49,8 +49,7 @@
 
             <v-slide-x-reverse-transition group tag="v-list">
               <template v-for="(task, i) in ongoingTasks">
-                <v-divider></v-divider>
-
+                <v-divider :key="task.id+task.name"></v-divider>
                 <v-list-tile :key="task.id" avatar @click="">
                   <v-list-tile-avatar>
                     <v-icon :class="deadlineTag(task.deadline).class">{{ deadlineTag(task.deadline).emot }}</v-icon>
@@ -86,7 +85,7 @@
             </v-subheader>
             <v-slide-x-transition group tag="v-list">
               <template v-for="(task, i) in completedTasks">
-                <v-divider></v-divider>
+                <v-divider :key="task.id+task.name"></v-divider>
 
                 <v-list-tile :key="task.id" avatar @click="">
                   <v-list-tile-avatar>
@@ -127,7 +126,6 @@
 <script>
 import Modal from '@/components/Modal'
 import { mapActions, mapMutations } from 'vuex'
-import moment from 'moment'
 
 export default {
   components: { Modal },

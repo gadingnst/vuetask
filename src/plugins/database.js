@@ -1,5 +1,5 @@
-import Vue from 'vue'
 import AlaSQL from 'alasql'
+
 class Database {
   constructor(dbname){
     AlaSQL.exec(`
@@ -58,11 +58,9 @@ class Database {
 
 }
 
-Plugin.install = Vue => {
-  Vue.db = Database
-  window.db = Database
-};
-
-Vue.use(Plugin)
-
-export default Plugin;
+export default {
+  install(Vue, options) {
+    Vue.db = Database
+    window.db = Database
+  }
+}

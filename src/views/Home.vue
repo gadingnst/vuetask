@@ -81,7 +81,6 @@
 <script>
 import { mapActions } from 'vuex'
 import uuid from 'uuid/v4'
-import moment from 'moment'
 
 export default {
   data: () => ({
