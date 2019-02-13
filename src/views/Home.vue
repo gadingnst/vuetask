@@ -144,6 +144,10 @@ export default {
       }
       this.tasks = []
     }
+  },
+  beforeDestroy(){
+    this.tasks = []
+    this.selectedTask = {}
   }
 }
 </script>

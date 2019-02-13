@@ -6,18 +6,42 @@
           <template slot="title">
             <v-icon size="18px">fa fa-question-circle</v-icon>
             &nbsp;<b>Petunjuk</b>
+            <v-spacer></v-spacer>
+            <v-menu offset-x bottom left>
+              <v-btn icon slot="activator">
+                <v-icon>fa fa-ellipsis-v</v-icon>
+              </v-btn>
+              <v-list>
+                <v-list-tile @click="modalList = false">
+                  <v-list-tile-title>Info Penyimpanan</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile @click="modalList = true">
+                  <v-list-tile-title>Info Status</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
           </template>
           <template slot="body">
-            <v-list three-line>
-              <v-list-tile avatar v-for="(hint, i) in hints" :key="i">
-                <v-list-tile-avatar>
-                  <v-icon :class="hint.class">{{ hint.icon }}</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  {{ hint.desc }}
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <v-slide-x-reverse-transition mode="out-in">
+              <v-container v-if="!modalList">
+                <v-avatar size="22px" color="warning">
+                  <v-icon>fa fa-info</v-icon>
+                </v-avatar>
+                <span slot="opposite">
+                  Penting! Data tersimpan pada Local Storage Browser. Kamu akan kehilangan datamu jika History Browsermu diclear, kamu bisa mengecualikan Aplikasi ini dalam pembersihan historymu.
+                </span>
+              </v-container>
+              <v-list three-line v-if="modalList">
+                <v-list-tile avatar v-for="(hint, i) in hints" :key="i">
+                  <v-list-tile-avatar>
+                    <v-icon :class="hint.class">{{ hint.icon }}</v-icon>
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    {{ hint.desc }}
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-slide-x-reverse-transition>
           </template>
           <template slot="actions">
             <v-spacer></v-spacer>
@@ -30,10 +54,9 @@
             <v-toolbar-title>List Tugas</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon @click="setModal">
-              <v-icon size="18px">fa fa-ellipsis-v</v-icon>
+              <v-icon size="18px">fa fa-question</v-icon>
             </v-btn>
           </v-toolbar>
-          
           <v-list three-line>
             <v-subheader v-if="totalTasks">
               <v-progress-linear 
@@ -130,6 +153,7 @@ import { mapActions, mapMutations } from 'vuex'
 export default {
   components: { Modal },
   data: () => ({
+    modalList: false,
     ongoingTasks: [],
     completedTasks: [],
     hints: [
@@ -257,6 +281,10 @@ export default {
         }
       })
     })
+  },
+  beforeDestroy(){
+    this.ongoingTasks = []
+    this.completedTasks = []
   }
 }
 </script>
