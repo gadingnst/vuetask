@@ -53,6 +53,9 @@
             <v-icon size="18px">fa fa-list-alt</v-icon>
             <v-toolbar-title>List Tugas</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn icon @click="allowPush">
+              <v-icon size="18px">fa fa-bell</v-icon>
+            </v-btn>
             <v-btn icon @click="setModal">
               <v-icon size="18px">fa fa-question</v-icon>
             </v-btn>
@@ -181,8 +184,15 @@ export default {
       setModal: 'setModal'
     }),
     ...mapActions({
-      setSnackbar: 'setSnackbar'
+      setSnackbar: 'setSnackbar',
+      push: 'notify'
     }),
+    allowPush(){
+      this.push({
+        title: 'Notifikasi Diaktifkan',
+        body: 'Anda telah mengaktifkan notifikasi aplikasi ini.'
+      })
+    },
     diffDate(deadline){
       return moment(deadline).diff(this.date, 'days')
     },
