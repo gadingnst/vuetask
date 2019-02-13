@@ -15,6 +15,7 @@
 2. Set your Tasks as Completed.
 3. Get the remaining of Deadline days.
 4. Shows the percentage of your completed Tasks
+5. Give notification on task deadlines (ON GOING...)
 
 ## Build Setup
 
