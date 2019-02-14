@@ -36,4 +36,19 @@ npm run build --report
 npm run publish
 ```
 
+###### Important! modify 'assetsPublicPath' in config/index.js to replace baseurl in production
+
+``` js
+module.exports = {
+  build: {
+    ...
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/vuetask/', // default '/'
+    productionSourceMap: true,
+    ...
+  },
+  ...
+}
+```
+
 < /> with ♥ by [Sutan Nst.](https://sutanlab.js.org)
