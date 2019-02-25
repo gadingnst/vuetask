@@ -36,7 +36,7 @@ npm run build --report
 npm run publish
 ```
 
-###### Important! modify 'assetsPublicPath' in config/index.js to replace baseurl in production
+### Important! modify 'assetsPublicPath' in config/index.js to replace baseurl in production
 
 ``` js
 module.exports = {
