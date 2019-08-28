@@ -1,5 +1,7 @@
 # Vuetask Application
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ed58fd69-d74b-4a42-ae4d-cb760c0c01c9/deploy-status)](https://app.netlify.com/sites/brave-leakey-41b91c/deploys)
+
 > A Simple Task Management Application with Client-side Database
 
 > Website : https://vuetask.sutanlab.id
