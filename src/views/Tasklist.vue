@@ -188,10 +188,25 @@ export default {
       push: 'notify'
     }),
     allowPush(){
-      window.notify({
-        title: 'Notifikasi Diaktifkan',
-        body: 'Anda telah mengaktifkan notifikasi aplikasi ini.'
-      })
+      window.push.Permission.request(
+        () => {
+          if (window.push.Permission.has()) {
+            window.notify({
+              title: 'Notifikasi Diaktifkan',
+              body: 'Anda telah mengaktifkan notifikasi aplikasi ini.'
+            })
+            if (!window.intervalCheck) {
+              window.intervalCheck = setInterval(window.checkTaskInterval, 2000)
+            }
+          }
+        },
+        () => {
+          this.setSnackbar({
+            visible: true,
+            msg: 'Notifikasi tidak diizinkan! Silahkan izinkan jika ingin mendapatkan notifikasi deadline dari aplikasi ini!'
+          }) 
+        }
+      )
     },
     diffDate(deadline){
       return window.moment(deadline).diff(this.date, 'days')
