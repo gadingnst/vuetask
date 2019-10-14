@@ -188,25 +188,30 @@ export default {
       push: 'notify'
     }),
     allowPush(){
-      window.push.Permission.request(
-        () => {
-          if (window.push.Permission.has()) {
+      if (window.push.Permission.has()) {
+        window.notify({
+          title: 'Notifikasi sudah Diaktifkan',
+          body: 'Anda sudah mengaktifkan notifikasi, tidak perlu mengaktifkan lagi.'
+        })
+      } else {
+        window.push.Permission.request(
+          () => {
             window.notify({
               title: 'Notifikasi Diaktifkan',
               body: 'Anda telah mengaktifkan notifikasi aplikasi ini.'
             })
             if (!window.intervalCheck) {
-              window.intervalCheck = setInterval(window.checkTaskInterval, 2000)
+              window.intervalCheck = setInterval(window.checkTaskInterval, 60000)
             }
+          },
+          () => {
+            this.setSnackbar({
+              visible: true,
+              msg: 'Notifikasi tidak diizinkan! Silahkan izinkan jika ingin mendapatkan notifikasi deadline dari aplikasi ini!'
+            })
           }
-        },
-        () => {
-          this.setSnackbar({
-            visible: true,
-            msg: 'Notifikasi tidak diizinkan! Silahkan izinkan jika ingin mendapatkan notifikasi deadline dari aplikasi ini!'
-          }) 
-        }
-      )
+        )
+      }
     },
     diffDate(deadline){
       return window.moment(deadline).diff(this.date, 'days')

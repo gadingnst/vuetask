@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
         'For more details, visit https://goo.gl/AFskqB'
       )
       if (window.push.Permission.has()) {
-        window.intervalCheck = setInterval(window.checkTaskInterval, 2000)
+        window.intervalCheck = setInterval(window.checkTaskInterval, 60000)
       }
     },
     registered () {
