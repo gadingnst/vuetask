@@ -37,6 +37,13 @@ yarn build
 yarn lint
 ```
 
+## Support Me
+### Global
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B71P7PB)
+### Indonesia
+- [Trakteer](https://trakteer.id/sutanlab)
+- [Karyakarsa](https://karyakarsa.com/sutanlab)
+
 ---
 
 < /> with ♥ by [Sutan Nasution.](https://sutanlab.id)
